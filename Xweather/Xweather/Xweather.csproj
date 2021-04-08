@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,7 +11,46 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\globe.svg" />
+    <None Remove="Assets\globe1.svg" />
+    <None Remove="Assets\home.svg" />
+    <None Remove="Assets\home1.svg" />
+    <None Remove="Assets\map.svg" />
+    <None Remove="Assets\map1.svg" />
+    <None Remove="Assets\pollution.svg" />
+    <None Remove="Assets\pollution1.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\globe1.svg" />
+    <EmbeddedResource Include="Assets\home1.svg" />
+    <EmbeddedResource Include="Assets\map1.svg" />
+    <EmbeddedResource Include="Assets\pollution1.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\globe.svg" />
+    <Resource Include="Assets\home.svg" />
+    <Resource Include="Assets\map.svg" />
+    <Resource Include="Assets\pollution.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2012" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\Home.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Map.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Pollution.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
