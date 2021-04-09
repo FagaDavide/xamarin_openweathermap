@@ -31,5 +31,10 @@ namespace Xweather.Views
             tk.Wait();
             hvm.Wr = tk.Result;
         }
+
+        async void OnClickGpsRequest(object sender, EventArgs e)
+        {
+            await DisplayAlert("Alert", "Pas encore fait", "OK");
+        }
     }
 }

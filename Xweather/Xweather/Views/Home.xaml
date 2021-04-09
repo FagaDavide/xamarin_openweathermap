@@ -4,20 +4,35 @@
              x:Class="Xweather.Views.Home"
              Visual="Material">
     <ContentPage.Content>
-        <StackLayout>
-            <Entry  Completed="OnClickSendRequest" Text="{ Binding SearchCity }" HorizontalOptions="CenterAndExpand" 
+        <FlexLayout Direction="Column" AlignItems="Center" JustifyContent="SpaceEvenly">
+            <!-- Search City-->
+            <StackLayout  Orientation="Vertical" HorizontalOptions="Fill">
+                <Entry  Completed="OnClickSendRequest" Text="{ Binding SearchCity }" VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand" 
                     TextTransform="Uppercase" TextColor="Black" WidthRequest="300" HeightRequest="100" Placeholder="Enter the city" 
                     ReturnType="Send" IsSpellCheckEnabled="True" IsTextPredictionEnabled="false" ClearButtonVisibility="WhileEditing"/>
-            <Label Text="{ Binding Wr.weather[0].description }" HorizontalOptions="Start" 
-                   TextColor="Black" FontSize="Medium" />
-            <Image HeightRequest="100" WidthRequest="100" Source="{ Binding Wr.weather[0].GetIcon }"/>
-
-            <Button
-                x:Name = "button1" Text="Click My Tralala, my Dingdingdong" 
-                BackgroundColor="Pink" TextColor="Black"
-                Clicked = "OnClickSendRequest"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"/>
-        </StackLayout>
+                <StackLayout  Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                    <Button
+                        x:Name = "button1" Text="Search" 
+                        BackgroundColor="DodgerBlue" 
+                        Clicked = "OnClickSendRequest"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"/>
+                    <Button
+                        x:Name = "button2" Text="GPS" 
+                        BackgroundColor="DodgerBlue" 
+                        Clicked = "OnClickGpsRequest"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"/>  
+                </StackLayout>
+            </StackLayout>
+            <!-- Response Current Weather -->
+            <StackLayout  Orientation="Vertical">
+                <StackLayout  Orientation="Horizontal" HorizontalOptions="Fill">
+                    <Image HorizontalOptions="Start" HeightRequest="160" WidthRequest="160" Source="{ Binding Wr.weather[0].GetIcon }"/>
+                    <Label Text="{ Binding Wr.main.temp, StringFormat='{}{0:#,0.0}°'}" VerticalOptions="Center" HorizontalOptions="End" FontAttributes="Bold" FontSize="40"/>
+                </StackLayout>
+                <Label Text="{ Binding Wr.weather[0].description }" HorizontalOptions="CenterAndExpand" FontSize="30" />
+            </StackLayout>
+        </FlexLayout>
     </ContentPage.Content>
 </ContentPage>

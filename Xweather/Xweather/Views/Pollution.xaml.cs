@@ -15,7 +15,7 @@ namespace Xweather.Views
         public Pollution()
         {
             InitializeComponent();
-            this.Title = "Pollution";
+            this.Title = "POLLUTION";
         }
     }
 }
