@@ -16,6 +16,7 @@ namespace Xweather.ApiOpenWeather
         const string DEFAULT_CITY = "Neuchatel";
         const string DEFAULT_LANG = "fr";
         const string TEMP_UNIT = "metric";
+        const string LIMIT_CNT = "40";
         readonly HttpClient httpClient;
      
         public ApiRequestor()
@@ -24,8 +25,26 @@ namespace Xweather.ApiOpenWeather
         }
 
 
-        //ResponseCurrentMeteo rcm = JsonConvert.DeserializeObject<ResponseCurrentMeteo>(result);
-        public async Task<WeatherRoot> GetCurrentWeather(String City = DEFAULT_CITY)
+    public async Task<ForecastRoot> GetForecast(String City = DEFAULT_CITY)
+    {
+        Uri uri = new Uri(URL_BASE + "/forecast?q=" + City + "&cnt="+ LIMIT_CNT + "&appid=" + API_KEY + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
+        var resultInJSON = string.Empty;
+        HttpResponseMessage response = await httpClient.GetAsync(uri);
+        if (response.IsSuccessStatusCode)
+            resultInJSON = await response.Content.ReadAsStringAsync();
+        else
+            Debug.WriteLine("ApiRequestor - GetForecast - Foireux (city name?)");
+
+        if (string.IsNullOrEmpty(resultInJSON))
+            return null;
+
+        Debug.WriteLine(resultInJSON); //a supprimer en prod
+
+        return JsonConvert.DeserializeObject<ForecastRoot>(resultInJSON);
+    }
+
+    //ResponseCurrentMeteo rcm = JsonConvert.DeserializeObject<ResponseCurrentMeteo>(result);
+    public async Task<WeatherRoot> GetCurrentWeather(String City = DEFAULT_CITY)
         {
             Uri uri = new Uri(URL_BASE + "/weather?q=" + City + "&appid=" + API_KEY + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
             var resultInJSON = string.Empty;

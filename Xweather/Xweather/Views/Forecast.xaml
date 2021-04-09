@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Xweather.Views.Forecast">
+    <ContentPage.Content>
+        <!-- Response Forecast -->
+        <StackLayout Orientation="Horizontal">
+            <ListView ItemsSource="{Binding Fr.list}" RowHeight="100" SeparatorColor="DodgerBlue">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Image HeightRequest="80" WidthRequest="80" Source="{Binding weather[0].GetIcon}"/>
+                                <StackLayout Orientation="Vertical">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding main.temp, StringFormat='{}{0:#,0.0}°'}" FontSize="25" FontAttributes="Bold" TextColor="DodgerBlue"/>
+                                        <Label Text="{Binding weather[0].description}" FontSize="25" FontAttributes="Bold" TextColor="DodgerBlue"/>
+                                    </StackLayout>
+                                    <Label Text="{Binding GetDate}" FontSize="Large" />
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

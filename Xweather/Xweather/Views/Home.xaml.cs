@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -15,26 +12,29 @@ namespace Xweather.Views
     public partial class Home : ContentPage
     {
         HomeViewModel hvm;
+        ApiRequestor ar; 
         public Home()
         {
             InitializeComponent();
             this.Title = "HOME";
 
-            hvm = new HomeViewModel();
+            ar = new ApiRequestor();
+            hvm = HomeViewModel.GetInstance();
             this.BindingContext = hvm;
         }
 
         private void OnClickSendRequest(object sender, EventArgs args)
         {
-            var ar = new ApiRequestor();
             var tk = Task.Run(() => ar.GetCurrentWeather(hvm.SearchCity));
             tk.Wait();
             hvm.Wr = tk.Result;
         }
 
-        async void OnClickGpsRequest(object sender, EventArgs e)
+        private void OnClickGpsRequest(object sender, EventArgs e)
         {
-            await DisplayAlert("Alert", "Pas encore fait", "OK");
+            var tk = Task.Run(() => ar.GetForecast());
+            tk.Wait();
+            hvm.Fr = tk.Result;
         }
     }
 }

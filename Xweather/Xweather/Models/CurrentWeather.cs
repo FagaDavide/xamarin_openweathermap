@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Newtonsoft.Json;
 
 namespace Xweather.Models
 {
     /// <summary>
-    /// this class is the perfect slipper to consume a json response of a request like this:
+    /// this class are the perfect slipper to consume a json response of a request like this:
     /// https://api.openweathermap.org/data/2.5/weather?q=Neuchatel&appid=028fad0a3bdbe8951a4277909e5cf80d
     /// and is made with https://json2csharp.com/
     /// </summary>
-    /// 
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<WeatherRoot>(myJsonResponse); 
     public class Coord
     {
         public double lon { get; set; } = 0.0;
@@ -60,6 +59,17 @@ namespace Xweather.Models
         public int sunrise { get; set; } = 0;
         public int sunset { get; set; } = 0;
     }
+    public class City
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public Coord coord { get; set; }
+        public string country { get; set; }
+        public int population { get; set; }
+        public int timezone { get; set; }
+        public int sunrise { get; set; }
+        public int sunset { get; set; }
+    }
 
     public class WeatherRoot
     {
@@ -76,5 +86,26 @@ namespace Xweather.Models
         public int id { get; set; } = 0;
         public string name { get; set; } = string.Empty;
         public int cod { get; set; } = 0;
+
+        [JsonIgnore]
+        public string GetDate {
+            get 
+            {
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
+                return dtDateTime.ToString("f", new CultureInfo("fr-FR")); //day;
+
+            }
+        }
+    }
+
+    public class ForecastRoot
+    {
+        public string cod { get; set; }
+        public int message { get; set; }
+        public int cnt { get; set; }
+        [JsonProperty("list")]
+        public List<WeatherRoot> list { get; set; }
+        public City city { get; set; }
     }
 }
