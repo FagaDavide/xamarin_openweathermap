@@ -14,7 +14,9 @@ namespace Xweather.ApiOpenWeather
         const string URL_BASE = "https://api.openweathermap.org/data/2.5";
         const string API_KEY = "028fad0a3bdbe8951a4277909e5cf80d";
         const string DEFAULT_CITY = "Neuchatel";
-        HttpClient httpClient;
+        const string DEFAULT_LANG = "fr";
+        const string TEMP_UNIT = "metric";
+        readonly HttpClient httpClient;
      
         public ApiRequestor()
         {
@@ -23,35 +25,22 @@ namespace Xweather.ApiOpenWeather
 
 
         //ResponseCurrentMeteo rcm = JsonConvert.DeserializeObject<ResponseCurrentMeteo>(result);
-        public async Task<String> getCurrentWeather(String City = DEFAULT_CITY)
+        public async Task<WeatherRoot> GetCurrentWeather(String City = DEFAULT_CITY)
         {
-            Uri uri = new Uri(URL_BASE + "/weather?q=" + City + "&appid=" + API_KEY);
+            Uri uri = new Uri(URL_BASE + "/weather?q=" + City + "&appid=" + API_KEY + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
             var resultInJSON = string.Empty;
             HttpResponseMessage response = await httpClient.GetAsync(uri);
             if (response.IsSuccessStatusCode)
                 resultInJSON = await response.Content.ReadAsStringAsync();
             else
-                Debug.WriteLine("Foireux");
+                Debug.WriteLine("ApiRequestor - GetCurrentWeather - Foireux (city name?)");
 
-            if (string.IsNullOrWhiteSpace(resultInJSON))
+            if (string.IsNullOrEmpty(resultInJSON))
                 return null;
 
-            CurrentWeather toto = JsonConvert.DeserializeObject<CurrentWeather>(resultInJSON);
-            Debug.WriteLine("OK1 - result");
-            Debug.WriteLine(resultInJSON);
-            Debug.WriteLine("OK2");
-            Debug.WriteLine("OK3 - json");
-            Debug.WriteLine(toto);
-            Debug.WriteLine("OK4");
-            Debug.WriteLine("OK5 - test");
-            Debug.WriteLine(toto.visibility);
-            Debug.WriteLine(toto.coord);
-
-
-
-
-
-            return resultInJSON;
+            Debug.WriteLine(resultInJSON); //a supprimer en prod
+        
+            return JsonConvert.DeserializeObject<WeatherRoot>(resultInJSON);
         }
     }
 }

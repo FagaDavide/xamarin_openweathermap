@@ -24,18 +24,12 @@ namespace Xweather.Views
             this.BindingContext = hvm;
         }
 
-        private void OnClick(object sender, EventArgs args)
+        private void OnClickSendRequest(object sender, EventArgs args)
         {
             var ar = new ApiRequestor();
-            var t = Task.Run(() => ar.getCurrentWeather());
-            t.Wait();
-            System.Diagnostics.Debug.WriteLine(t.Result);
-
-            //idée c'est de faire un json et de le mettre dans currentWeather
-
-            hvm.weatherInfoTmp = t.Result;
-
-
+            var tk = Task.Run(() => ar.GetCurrentWeather(hvm.SearchCity));
+            tk.Wait();
+            hvm.Wr = tk.Result;
         }
     }
 }

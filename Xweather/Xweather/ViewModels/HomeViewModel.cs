@@ -1,39 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Nito.Mvvm.CalculatedProperties; // one true <3 to  StephenCleary@github 
+using System;
+using System.ComponentModel;
 using Xweather.Models;
 
 namespace Xweather.ViewModels
 {
-    class HomeViewModel : BaseViewModel
+    class HomeViewModel : INotifyPropertyChanged
     {
-        private CurrentWeather cw;
+        private readonly PropertyHelper Property;
+        public event PropertyChangedEventHandler PropertyChanged;
         public HomeViewModel()
         {
-            cw = new CurrentWeather
-            {
-                name = "ville TOto",
-                weatherInfoTmp = string.Empty,
-            };
+            Property = new PropertyHelper(RaisePropertyChanged);
+            wr = new WeatherRoot();
         }
 
-        public string name
+        private WeatherRoot wr;
+        public WeatherRoot Wr
         {
-            get { return cw.name; }
-            set
-            {
-                cw.name = value;
-                OnPropertyChanged("name");
+            get { return Property.Get(wr); }
+            set { Property.Set(value); }
+        }
+
+        private string searchCity = "Neuchatel";
+        public string SearchCity
+        {
+            get { return searchCity; }
+            set 
+            { 
+                searchCity = value;
+                OnPropertyChanged("searchCity");
             }
         }
-        public string weatherInfoTmp
+
+        private void RaisePropertyChanged(PropertyChangedEventArgs args)
         {
-            get { return cw.weatherInfoTmp; }
-            set
-            {
-                cw.weatherInfoTmp = value;
-                OnPropertyChanged("weatherInfoTmp");
-            }
+            if (PropertyChanged != null)
+                PropertyChanged(this, args);
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

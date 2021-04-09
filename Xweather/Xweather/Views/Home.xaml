@@ -5,21 +5,17 @@
              Visual="Material">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="cityName: " HorizontalOptions="Start" 
+            <Entry  Completed="OnClickSendRequest" Text="{ Binding SearchCity }" HorizontalOptions="CenterAndExpand" 
+                    TextTransform="Uppercase" TextColor="Black" WidthRequest="300" HeightRequest="100" Placeholder="Enter the city" 
+                    ReturnType="Send" IsSpellCheckEnabled="True" IsTextPredictionEnabled="false" ClearButtonVisibility="WhileEditing"/>
+            <Label Text="{ Binding Wr.weather[0].description }" HorizontalOptions="Start" 
                    TextColor="Black" FontSize="Medium" />
-            <Editor Text="{ Binding name }" HorizontalOptions="CenterAndExpand" 
-                   TextColor="Black" />
-            <Label Text="{ Binding name }" HorizontalOptions="Start" 
-                   TextColor="Black" FontSize="Medium" />
-            <Label Text="{ Binding weatherInfoTmp }" HorizontalOptions="Start" 
-                   TextColor="Black" FontSize="Medium" />
-            <Label Text="HOME"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Image HeightRequest="100" WidthRequest="100" Source="{ Binding Wr.weather[0].GetIcon }"/>
+
             <Button
                 x:Name = "button1" Text="Click My Tralala, my Dingdingdong" 
                 BackgroundColor="Pink" TextColor="Black"
-                Clicked = "OnClick"
+                Clicked = "OnClickSendRequest"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"/>
         </StackLayout>
