@@ -97,6 +97,26 @@ namespace Xweather.Models
 
             }
         }
+
+        [JsonIgnore]
+        public string GetDateDay {
+            get {
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
+                return dtDateTime.ToString("dddd, dd MMMM yyyy", new CultureInfo("fr-FR"));;
+
+            }
+        }
+
+        [JsonIgnore]
+        public string GetDateHour {
+            get {
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
+                return dtDateTime.ToString("HH:mm", new CultureInfo("fr-FR")); ;
+
+            }
+        }
     }
 
     public class ForecastRoot

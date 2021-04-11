@@ -1,5 +1,8 @@
 ﻿using Nito.Mvvm.CalculatedProperties; // one true <3 to  StephenCleary@github 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using Xamarin.Forms;
 using Xweather.Models;
 
@@ -10,12 +13,32 @@ namespace Xweather.ViewModels
         private static HomeViewModel instance;
         private readonly PropertyHelper Property;
         public event PropertyChangedEventHandler PropertyChanged;
+        public IList<WeatherRoot> Items { get; private set; }
+       
 
         private HomeViewModel()
         {
             Property = new PropertyHelper(RaisePropertyChanged);
             wr = new WeatherRoot();
             fr = new ForecastRoot();
+
+           
+        }
+
+
+        private List<ObservableGroupCollection<string, WeatherRoot>> groupedData;
+        public List<ObservableGroupCollection<string, WeatherRoot>> GroupedData {
+
+            get { return Property.Get(groupedData); }
+            set { Property.Set(value); }
+        }
+    
+         
+        public void updateGroupedDataForcast()
+        {
+            GroupedData = Fr.list.OrderBy(p => p.dt)
+               .GroupBy(p => p.GetDateDay.ToString())
+               .Select(p => new ObservableGroupCollection<string, WeatherRoot>(p)).ToList();
         }
 
         public static HomeViewModel GetInstance()
@@ -78,4 +101,18 @@ namespace Xweather.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
+    public class ObservableGroupCollection<S, T> : ObservableCollection<T>
+    {
+        private readonly S _key;
+        public ObservableGroupCollection(IGrouping<S, T> group)
+            : base(group)
+        {
+            _key = group.Key;
+        }
+        public S Key {
+            get { return _key; }
+        }
+    }
+
 }

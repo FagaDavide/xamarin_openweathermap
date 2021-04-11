@@ -32,9 +32,11 @@ namespace Xweather.Views
 
         private void OnClickGpsRequest(object sender, EventArgs e)
         {
-            var tk = Task.Run(() => ar.GetForecast());
+            var tk = Task.Run(() => ar.GetForecast(hvm.SearchCity));
             tk.Wait();
             hvm.Fr = tk.Result;
+
+            hvm.updateGroupedDataForcast();
         }
     }
 }

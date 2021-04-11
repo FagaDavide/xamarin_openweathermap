@@ -5,7 +5,12 @@
     <ContentPage.Content>
         <!-- Response Forecast -->
         <StackLayout Orientation="Horizontal">
-            <ListView ItemsSource="{Binding Fr.list}" RowHeight="100" SeparatorColor="DodgerBlue">
+            <ListView 
+                GroupDisplayBinding="{ Binding Key }"
+                IsGroupingEnabled="True"   
+                ItemsSource="{ Binding GroupedData }"
+                HasUnevenRows ="True"
+                SeparatorColor="DodgerBlue">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -13,15 +18,31 @@
                                 <Image HeightRequest="80" WidthRequest="80" Source="{Binding weather[0].GetIcon}"/>
                                 <StackLayout Orientation="Vertical">
                                     <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding main.temp, StringFormat='{}{0:#,0.0}°'}" FontSize="25" FontAttributes="Bold" TextColor="DodgerBlue"/>
+                                        <Label Text="{Binding main.temp, StringFormat='{}{0:#,0}°'}" FontSize="25" FontAttributes="Bold" TextColor="DodgerBlue"/>
                                         <Label Text="{Binding weather[0].description}" FontSize="25" FontAttributes="Bold" TextColor="DodgerBlue"/>
                                     </StackLayout>
-                                    <Label Text="{Binding GetDate}" FontSize="Large" />
+                                    <Label Text="{Binding GetDateHour}" FontSize="Large" />
                                 </StackLayout>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <!-- Listview Header -->
+                <ListView.Header>
+                    <StackLayout Orientation="Horizontal" BackgroundColor="DodgerBlue">
+                        <Label Text="{ Binding Fr.city.name }" FontSize="35" FontAttributes="Bold" TextColor="White" />
+                    </StackLayout>
+                </ListView.Header>
+                <!-- End Listview Header-->
+                <!-- Group Header -->
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label Text="{Binding Key}" FontAttributes="Bold" FontSize="30"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
+                <!-- End Group Header  -->
             </ListView>
         </StackLayout>
     </ContentPage.Content>
