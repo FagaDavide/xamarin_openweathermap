@@ -7,15 +7,14 @@ using Xweather.Models;
 using SkiaSharp;
 using Microcharts;
 using System;
+using System.Threading.Tasks;
 
 namespace Xweather.ViewModels
 {
     class HomeViewModel : INotifyPropertyChanged
     {
 
-        private readonly PropertyHelper Property;
-        public event PropertyChangedEventHandler PropertyChanged;
- 
+
 
         /* CONSTRUCTOR */
         private HomeViewModel()
@@ -25,14 +24,12 @@ namespace Xweather.ViewModels
             fr = new ForecastRoot();
 
             initCharts();
-           
+         
             MyCharts.Add(new MyChart() { ChartData = ChartTemperature, NatureData = "Temperature" });
             MyCharts.Add(new MyChart() { ChartData = ChartPressure, NatureData = "Pression Atmo" });
             MyCharts.Add(new MyChart() { ChartData = ChartHumidity, NatureData = "Humidité" });
             MyCharts.Add(new MyChart() { ChartData = ChartWind, NatureData = "Vent" });
         }
-
-      
 
         /* SINGLETON */
         private static HomeViewModel instance;
@@ -61,7 +58,7 @@ namespace Xweather.ViewModels
             }
         }
 
-        /* Elements from openwather and bind in differents view*/
+        /* Elements root from openwather and bind in differents view*/
         private ForecastRoot fr;
         public ForecastRoot Fr {
             get { return Property.Get(fr); }
@@ -75,7 +72,7 @@ namespace Xweather.ViewModels
         }
 
         /* USER INPUT */
-        private string searchCity = "Neuchatel";
+        private string searchCity = "Neuchâtel";
         public string SearchCity {
             get { return searchCity; }
             set {
@@ -85,6 +82,8 @@ namespace Xweather.ViewModels
         }
 
         /* Data Binding system */
+        private readonly PropertyHelper Property;
+        public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(PropertyChangedEventArgs args)
         {
             if (PropertyChanged != null)
@@ -98,7 +97,44 @@ namespace Xweather.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        /* Charts */
+        /* Charts System */
+        private List<MyChart> myCharts = new List<MyChart>();
+        public List<MyChart> MyCharts {
+            get { return Property.Get(myCharts); }
+            set { Property.Set(value); }
+        }
+
+        private Chart ChartPressure { get; set; } = null;
+        private Chart ChartTemperature { get; set; } = null;
+        private Chart ChartHumidity { get; set; } = null;
+        private Chart ChartWind { get; set; } = null;
+
+        private List<ChartEntry> entriesPressure = new List<ChartEntry>();
+        public List<ChartEntry> EntriesPressure {
+
+            get { return Property.Get(entriesPressure); }
+            set { Property.Set(value); }
+        }
+        private List<ChartEntry> entriesTemperature = new List<ChartEntry>();
+        public List<ChartEntry> EntriesTemperature {
+
+            get { return Property.Get(entriesTemperature); }
+            set { Property.Set(value); }
+        }
+
+        private List<ChartEntry> entriesHumidity = new List<ChartEntry>();
+        public List<ChartEntry> EntriesHumidity {
+
+            get { return Property.Get(entriesHumidity); }
+            set { Property.Set(value); }
+        }
+
+        private List<ChartEntry> entriesWind = new List<ChartEntry>();
+        public List<ChartEntry> EntriesWind {
+
+            get { return Property.Get(entriesWind); }
+            set { Property.Set(value); }
+        }
 
         /* GroupedDataChart showed in chart tab*/
         private List<ObservableGroupCollection<string, MyChart>> groupedDataChart;
@@ -108,16 +144,6 @@ namespace Xweather.ViewModels
             set { Property.Set(value); }
         }
 
-        public void updateChartAndGroupedDataChart()
-        {
-            updateChartData();
-            if (MyCharts != null)
-            {
-                GroupedDataChart = MyCharts
-                    .GroupBy(p => p.NatureData)
-                    .Select(p => new ObservableGroupCollection<string, MyChart>(p)).ToList();
-            }
-        }
         private void initCharts()
         {
             ChartPressure = new LineChart() {
@@ -148,7 +174,6 @@ namespace Xweather.ViewModels
                 AnimationDuration = new TimeSpan(0, 0, 20),
                 LabelTextSize = 60f,
                 LabelColor = SKColors.DodgerBlue,
-                //EnableYFadeOutGradient = true,
                 BackgroundColor = SKColors.White,
                 Entries = EntriesHumidity,
             };
@@ -164,64 +189,6 @@ namespace Xweather.ViewModels
             };
         }
 
-        private List<MyChart> myCharts = new List<MyChart>();
-        public List<MyChart> MyCharts {
-            get { return Property.Get(myCharts); }
-            set { Property.Set(value); }
-        }
-        
-
-        private List<ChartEntry> entriesPressure = new List<ChartEntry>();
-        public List<ChartEntry> EntriesPressure {
-
-            get { return Property.Get(entriesPressure); }
-            set { Property.Set(value); }
-        }
-        private List<ChartEntry> entriesTemperature = new List<ChartEntry>();
-        public List<ChartEntry> EntriesTemperature {
-
-            get { return Property.Get(entriesTemperature); }
-            set { Property.Set(value); }
-        }
-
-        private List<ChartEntry> entriesHumidity = new List<ChartEntry>();
-        public List<ChartEntry> EntriesHumidity {
-
-            get { return Property.Get(entriesHumidity); }
-            set { Property.Set(value); }
-        }
-
-        private List<ChartEntry> entriesWind = new List<ChartEntry>();
-        public List<ChartEntry> EntriesWind {
-
-            get { return Property.Get(entriesWind); }
-            set { Property.Set(value); }
-        }
-
-        private Chart chartPressure = null;
-        public Chart ChartPressure {
-            get { return Property.Get(chartPressure); }
-            set { Property.Set(value); }
-        }
-
-        private Chart chartTemperature = null;
-        public Chart ChartTemperature {
-            get { return Property.Get(chartTemperature); }
-            set { Property.Set(value); }
-        }
-
-        private Chart chartHumidity = null;
-        public Chart ChartHumidity {
-            get { return Property.Get(chartHumidity); }
-            set { Property.Set(value); }
-        }
-
-        private Chart chartWind = null;
-        public Chart ChartWind {
-            get { return Property.Get(chartWind); }
-            set { Property.Set(value); }
-        }
-
         public void updateChartData()
         {
             EntriesPressure.Clear();
@@ -232,13 +199,13 @@ namespace Xweather.ViewModels
             if (Fr != null)
             {
                 Random rnd;
-                var i = 0; //limite nb of value show in chart
+                var i = 0; //limie nb of value show in chart
                 Fr.list.ForEach(el => {
                     rnd = new Random();
                     var skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
                     i++;
-   
-                    if (i < 10)
+
+                    if (i <= 9)
                     {
                         EntriesPressure.Add(new ChartEntry((float)el.main.pressure) {
                             Label = el.GetDateHourH,
@@ -253,10 +220,9 @@ namespace Xweather.ViewModels
                             ValueLabelColor = skcolor,
                             Color = skcolor,
                         });
-
                     }
-                
-                    if (i < 20)
+
+                    if (i <= 17)
                     {
                         EntriesTemperature.Add(new ChartEntry((float)el.main.temp) {
                             Label = el.GetDateHourH,
@@ -276,8 +242,18 @@ namespace Xweather.ViewModels
 
             }
         }
-    }
 
+        public void updateChartAndGroupedDataChart()
+        {
+            updateChartData();
+            if (MyCharts != null)
+            {
+                GroupedDataChart = MyCharts
+                    .GroupBy(p => p.NatureData)
+                    .Select(p => new ObservableGroupCollection<string, MyChart>(p)).ToList();
+            }
+        }
+    }
 }
 
 /* Observable class use to group by key with GroupedData */
