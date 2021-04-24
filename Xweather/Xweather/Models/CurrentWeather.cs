@@ -94,7 +94,6 @@ namespace Xweather.Models
                 DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
                 return dtDateTime.ToString("f", new CultureInfo("fr-FR")); //day;
-
             }
         }
 
@@ -103,8 +102,7 @@ namespace Xweather.Models
             get {
                 DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
-                return dtDateTime.ToString("dddd, dd MMMM yyyy", new CultureInfo("fr-FR"));;
-
+                return dtDateTime.ToString("dddd, dd MMMM yyyy", new CultureInfo("fr-FR"));
             }
         }
 
@@ -113,8 +111,16 @@ namespace Xweather.Models
             get {
                 DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
-                return dtDateTime.ToString("HH:mm", new CultureInfo("fr-FR")); ;
+                return dtDateTime.ToString("HH:mm", new CultureInfo("fr-FR"));
+            }
+        }
 
+        [JsonIgnore]
+        public string GetDateHourH {
+            get {
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
+                return dtDateTime.ToString("HH", new CultureInfo("fr-FR")) + "h";
             }
         }
     }

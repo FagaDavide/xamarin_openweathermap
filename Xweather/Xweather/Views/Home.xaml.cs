@@ -25,18 +25,24 @@ namespace Xweather.Views
 
         private void OnClickSendRequest(object sender, EventArgs args)
         {
-            var tk = Task.Run(() => ar.GetCurrentWeather(hvm.SearchCity));
-            tk.Wait();
-            hvm.Wr = tk.Result;
+            var tk1 = Task.Run(() => ar.GetCurrentWeather(hvm.SearchCity));
+            var tk2 = Task.Run(() => ar.GetForecast(hvm.SearchCity));
+
+            tk1.Wait();
+            tk2.Wait();
+
+            hvm.Wr = tk1.Result;
+            hvm.Fr = tk2.Result;
+
+            hvm.updateGroupedDataForcast();
+            hvm.updateChartAndGroupedDataChart();
+
         }
 
         private void OnClickGpsRequest(object sender, EventArgs e)
         {
-            var tk = Task.Run(() => ar.GetForecast(hvm.SearchCity));
-            tk.Wait();
-            hvm.Fr = tk.Result;
+        
 
-            hvm.updateGroupedDataForcast();
         }
     }
 }

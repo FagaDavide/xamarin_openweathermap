@@ -38,7 +38,7 @@ namespace Xweather.ApiOpenWeather
         if (string.IsNullOrEmpty(resultInJSON))
             return null;
 
-        Debug.WriteLine(resultInJSON); //a supprimer en prod
+        //Debug.WriteLine(resultInJSON); //a supprimer en prod
 
         return JsonConvert.DeserializeObject<ForecastRoot>(resultInJSON);
     }
@@ -57,7 +57,7 @@ namespace Xweather.ApiOpenWeather
             if (string.IsNullOrEmpty(resultInJSON))
                 return null;
 
-            Debug.WriteLine(resultInJSON); //a supprimer en prod
+            //Debug.WriteLine(resultInJSON); //a supprimer en prod
         
             return JsonConvert.DeserializeObject<WeatherRoot>(resultInJSON);
         }

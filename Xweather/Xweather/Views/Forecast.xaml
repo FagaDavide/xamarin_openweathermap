@@ -8,7 +8,7 @@
             <ListView 
                 GroupDisplayBinding="{ Binding Key }"
                 IsGroupingEnabled="True"   
-                ItemsSource="{ Binding GroupedData }"
+                ItemsSource="{ Binding GroupedDataForcast }"
                 HasUnevenRows ="True"
                 SeparatorColor="DodgerBlue">
                 <ListView.ItemTemplate>
