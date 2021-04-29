@@ -19,8 +19,9 @@ namespace Xweather.UWP
     {
         public MainPage()
         {
-            this.InitializeComponent();
-
+            InitializeComponent();
+            // add key google api
+            Xamarin.FormsMaps.Init("AIzaSyDW4d7evFFjY64lK61yiUm2QnIfPp35cMI");
             LoadApplication(new Xweather.App());
         }
     }

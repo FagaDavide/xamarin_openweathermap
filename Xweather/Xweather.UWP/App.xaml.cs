@@ -1,4 +1,3 @@
-using Syncfusion.XForms.UWP.Buttons;
 using System.Reflection;
 using System;
 using System.Collections.Generic;
@@ -30,8 +29,8 @@ namespace Xweather.UWP
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace Xweather.UWP
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
@@ -58,9 +57,10 @@ namespace Xweather.UWP
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-List<Assembly> assembliesToInclude = new List<Assembly>();
-assembliesToInclude.Add(typeof(SfButtonRenderer).GetTypeInfo().Assembly);
-Xamarin.Forms.Forms.Init(e, assembliesToInclude);
+
+                //add to config map
+                var assembliesToInclude = new[] { typeof(Xamarin.Forms.Maps.UWP.MapRenderer).GetTypeInfo().Assembly };
+                Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -87,7 +87,7 @@ Xamarin.Forms.Forms.Init(e, assembliesToInclude);
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        public void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }

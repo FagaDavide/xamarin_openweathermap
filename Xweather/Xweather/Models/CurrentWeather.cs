@@ -128,6 +128,7 @@ namespace Xweather.Models
     public class ForecastRoot
     {
         public string cod { get; set; }
+        [JsonIgnore] //not important if i ignor it, i can have the same model for map and forcast
         public int message { get; set; }
         public int cnt { get; set; }
         [JsonProperty("list")]

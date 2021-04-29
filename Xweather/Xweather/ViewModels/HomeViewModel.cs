@@ -7,32 +7,36 @@ using Xweather.Models;
 using SkiaSharp;
 using Microcharts;
 using System;
-using System.Threading.Tasks;
+using Xamarin.Forms.Maps;
 
 namespace Xweather.ViewModels
 {
     class HomeViewModel : INotifyPropertyChanged
     {
-
-
-
         /* CONSTRUCTOR */
         private HomeViewModel()
         {
             Property = new PropertyHelper(RaisePropertyChanged);
-            wr = new WeatherRoot();
-            fr = new ForecastRoot();
+            wr = new WeatherRoot(); //current weather
+            fr = new ForecastRoot(); // list of weather with same city different date to show futur prevision
+            mr = new ForecastRoot(); // list of weather with same date differents cities to show in map current position and neiboors cities
 
             initCharts();
+            initMap();
          
             MyCharts.Add(new MyChart() { ChartData = ChartTemperature, NatureData = "Temperature" });
             MyCharts.Add(new MyChart() { ChartData = ChartPressure, NatureData = "Pression Atmo" });
             MyCharts.Add(new MyChart() { ChartData = ChartHumidity, NatureData = "Humidité" });
             MyCharts.Add(new MyChart() { ChartData = ChartWind, NatureData = "Vent" });
+           
         }
+
+     
+
 
         /* SINGLETON */
         private static HomeViewModel instance;
+
         public static HomeViewModel GetInstance()
         {
             if (instance == null)
@@ -52,7 +56,8 @@ namespace Xweather.ViewModels
         {
             if (Fr != null)
             {
-                GroupedDataForcast = Fr.list.OrderBy(p => p.dt)
+                GroupedDataForcast = Fr.list
+                   .OrderBy(p => p.dt)
                    .GroupBy(p => p.GetDateDay.ToString())
                    .Select(p => new ObservableGroupCollection<string, WeatherRoot>(p)).ToList();
             }
@@ -71,13 +76,19 @@ namespace Xweather.ViewModels
             set { Property.Set(value); }
         }
 
+        private ForecastRoot mr;
+        public ForecastRoot Mr {
+            get { return Property.Get(mr); }
+            set { Property.Set(value); }
+        }
+
         /* USER INPUT */
         private string searchCity = "Neuchâtel";
         public string SearchCity {
             get { return searchCity; }
             set {
-                searchCity = value;
-                OnPropertyChanged("searchCity");
+                  searchCity = value;
+                  OnPropertyChanged("searchCity");
             }
         }
 
@@ -97,6 +108,35 @@ namespace Xweather.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /* MAP System */
+
+        private Map map;
+        public Map Map {
+              get { return Property.Get(map); }
+              set { Property.Set(value); }
+        }
+
+        private void initMap()
+        {
+            Position CortaillodPosition = new Position(46.9333, 6.85);
+            MapSpan mapSpan = new MapSpan(CortaillodPosition, 0.01, 0.01);
+            Map = new Map(mapSpan);
+           
+        }
+
+        public void updateMap()
+        {
+            Map.Pins.Clear();
+            Mr.list.ForEach(el => {
+                var pin = new Pin() {
+                    Position = new Position(el.coord.lat, el.coord.lon),
+                    Label = el.name,
+                    Type = PinType.Place,
+                };
+                Map.Pins.Add(pin);
+            });
+        }
+
         /* Charts System */
         private List<MyChart> myCharts = new List<MyChart>();
         public List<MyChart> MyCharts {
@@ -109,37 +149,15 @@ namespace Xweather.ViewModels
         private Chart ChartHumidity { get; set; } = null;
         private Chart ChartWind { get; set; } = null;
 
-        private List<ChartEntry> entriesPressure = new List<ChartEntry>();
-        public List<ChartEntry> EntriesPressure {
 
-            get { return Property.Get(entriesPressure); }
-            set { Property.Set(value); }
-        }
-        private List<ChartEntry> entriesTemperature = new List<ChartEntry>();
-        public List<ChartEntry> EntriesTemperature {
-
-            get { return Property.Get(entriesTemperature); }
-            set { Property.Set(value); }
-        }
-
-        private List<ChartEntry> entriesHumidity = new List<ChartEntry>();
-        public List<ChartEntry> EntriesHumidity {
-
-            get { return Property.Get(entriesHumidity); }
-            set { Property.Set(value); }
-        }
-
-        private List<ChartEntry> entriesWind = new List<ChartEntry>();
-        public List<ChartEntry> EntriesWind {
-
-            get { return Property.Get(entriesWind); }
-            set { Property.Set(value); }
-        }
+        public List<ChartEntry> EntriesPressure { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesTemperature { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesHumidity { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesWind { get; set; } = new List<ChartEntry>();
 
         /* GroupedDataChart showed in chart tab*/
         private List<ObservableGroupCollection<string, MyChart>> groupedDataChart;
         public List<ObservableGroupCollection<string, MyChart>> GroupedDataChart {
-
             get { return Property.Get(groupedDataChart); }
             set { Property.Set(value); }
         }

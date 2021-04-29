@@ -24,8 +24,6 @@ namespace Xweather.Views
 
             hvm = HomeViewModel.GetInstance();
             this.BindingContext = hvm;
-
-            //MyListview.ItemsSource = hvm.MyCharts;
         }
     }
 }
