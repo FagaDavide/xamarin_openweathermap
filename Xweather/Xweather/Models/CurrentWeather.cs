@@ -28,6 +28,11 @@ namespace Xweather.Models
         public string GetIcon {
             get { return $"https://openweathermap.org/img/w/{icon}.png"; }
         }
+
+        [JsonIgnore]
+        public string GetIconBig {
+            get { return $"https://openweathermap.org/img/wn/{icon}@2x.png"; }
+        }
     }
 
     public class Main

@@ -1,5 +1,10 @@
 ﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:gmaps = "clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps" 
 			 x:Class="Xweather.Views.MapView">
-    
+
+    <Grid>
+        <gmaps:Map />
+    </Grid>
+
 </ContentPage>

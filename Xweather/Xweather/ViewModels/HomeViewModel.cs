@@ -7,7 +7,10 @@ using Xweather.Models;
 using SkiaSharp;
 using Microcharts;
 using System;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
+using Xamarin.Forms;
+using System.Net;
+using System.IO;
 
 namespace Xweather.ViewModels
 {
@@ -28,10 +31,7 @@ namespace Xweather.ViewModels
             MyCharts.Add(new MyChart() { ChartData = ChartPressure, NatureData = "Pression Atmo" });
             MyCharts.Add(new MyChart() { ChartData = ChartHumidity, NatureData = "Humidité" });
             MyCharts.Add(new MyChart() { ChartData = ChartWind, NatureData = "Vent" });
-           
         }
-
-     
 
 
         /* SINGLETON */
@@ -119,22 +119,58 @@ namespace Xweather.ViewModels
         private void initMap()
         {
             Position CortaillodPosition = new Position(46.9333, 6.85);
-            MapSpan mapSpan = new MapSpan(CortaillodPosition, 0.01, 0.01);
-            Map = new Map(mapSpan);
-           
+            MapSpan mapSpan = new MapSpan(CortaillodPosition, 1, 1);
+            Map = new Map();
+            Map.MoveToRegion(mapSpan, true);
+            Map.MapType = MapType.Satellite;
+
+            /* two choices  
+             * or button +- on map with small icon
+             * or no button +- with big icon 
+             Why? Scale is a zoom on the map object not zoom on the map, :-/ 
+             * also the button disappear. in simulator you can make double click or ctrl double click ton zoom*/
+
+            //no button+- big icon, comment the next line if you want the button +-
+            Map.Scale = 2;
         }
 
         public void updateMap()
         {
+            var webClient = new WebClient();
+            byte[] imageBytes;
+            Stream stream;
+            Image image = new Image();
             Map.Pins.Clear();
-            Mr.list.ForEach(el => {
-                var pin = new Pin() {
-                    Position = new Position(el.coord.lat, el.coord.lon),
-                    Label = el.name,
-                    Type = PinType.Place,
-                };
-                Map.Pins.Add(pin);
-            });
+
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                Mr.list.ForEach(el => {
+                    imageBytes = webClient.DownloadData(el.weather[0].GetIconBig);
+                    stream = new MemoryStream(imageBytes);
+              
+                    var imgSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    image.Source = imgSource;
+
+                    var pin = new Pin() {
+                        Position = new Position(el.coord.lat, el.coord.lon),
+                        Label = el.name + " " + String.Format("{0:#,0}°", el.main.temp),
+                        Icon = BitmapDescriptorFactory.FromStream(stream),
+                    };
+                    Map.Pins.Add(pin);
+                });
+            }
+            else if (Device.RuntimePlatform == Device.UWP)
+            {
+                Mr.list.ForEach(el => {
+                 
+                    var pin = new Pin() {
+                        Position = new Position(el.coord.lat, el.coord.lon),
+                        Label = el.name,
+                        Type = PinType.Place,
+                    };
+                    Map.Pins.Add(pin);
+                });
+            }
         }
 
         /* Charts System */

@@ -15,7 +15,7 @@ namespace Xweather
             this.Children.Add(new Home());
             this.Children.Add(new Forecast());
             this.Children.Add(new ChartView());
-           // if(Device.RuntimePlatform == Device.Android)
+            if(Device.RuntimePlatform == Device.Android)
                 this.Children.Add(new MapView());
             this.Children.Add(new Pollution());
             InitializeComponent();
