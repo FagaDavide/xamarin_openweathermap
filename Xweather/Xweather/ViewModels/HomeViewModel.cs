@@ -24,9 +24,9 @@ namespace Xweather.ViewModels
             fr = new ForecastRoot(); // list of weather with same city different date to show futur prevision
             mr = new ForecastRoot(); // list of weather with same date differents cities to show in map current position and neiboors cities
 
-            initCharts();
             initMap();
-         
+            initCharts();
+        
             MyCharts.Add(new MyChart() { ChartData = ChartTemperature, NatureData = "Temperature" });
             MyCharts.Add(new MyChart() { ChartData = ChartPressure, NatureData = "Pression Atmo" });
             MyCharts.Add(new MyChart() { ChartData = ChartHumidity, NatureData = "Humidité" });
@@ -85,11 +85,8 @@ namespace Xweather.ViewModels
         /* USER INPUT */
         private string searchCity = "Neuchâtel";
         public string SearchCity {
-            get { return searchCity; }
-            set {
-                  searchCity = value;
-                  OnPropertyChanged("searchCity");
-            }
+            get { return Property.Get(searchCity); }
+            set { Property.Set(value); }
         }
 
         /* Data Binding system */
@@ -109,11 +106,10 @@ namespace Xweather.ViewModels
         }
 
         /* MAP System */
-
         private Map map;
         public Map Map {
-              get { return Property.Get(map); }
-              set { Property.Set(value); }
+            get { return Property.Get(map); }
+            set { Property.Set(value); }
         }
 
         private void initMap()
@@ -144,10 +140,19 @@ namespace Xweather.ViewModels
 
             if (Device.RuntimePlatform == Device.Android)
             {
-                Mr.list.ForEach(el => {
+                // clean some data useless
+                var rejectedWords = new List<string> { "Canton", "District"};
+                var rejectList = new List<WeatherRoot>();
+                rejectedWords.ForEach(wd => {
+                    rejectList.AddRange(Mr.list.Where(i => i.name.Contains(wd)).ToList());
+                });
+                var cleanDistritAndCanton = Mr.list.Except(rejectList);
+                var distinctItems = cleanDistritAndCanton.GroupBy(x => x.name).Select(y => y.First()).ToList();
+                
+                distinctItems.ForEach(el => {
                     imageBytes = webClient.DownloadData(el.weather[0].GetIconBig);
                     stream = new MemoryStream(imageBytes);
-              
+
                     var imgSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
                     image.Source = imgSource;
 
@@ -159,20 +164,17 @@ namespace Xweather.ViewModels
                     Map.Pins.Add(pin);
                 });
             }
-            else if (Device.RuntimePlatform == Device.UWP)
-            {
-                Mr.list.ForEach(el => {
-                 
-                    var pin = new Pin() {
-                        Position = new Position(el.coord.lat, el.coord.lon),
-                        Label = el.name,
-                        Type = PinType.Place,
-                    };
-                    Map.Pins.Add(pin);
-                });
-            }
         }
 
+        /* GeoLoc System */
+     
+        private Xamarin.Essentials.Location location;
+        public Xamarin.Essentials.Location Location {
+            get { return Property.Get(location); }
+            set { Property.Set(value); }
+        }
+      
+        
         /* Charts System */
         private List<MyChart> myCharts = new List<MyChart>();
         public List<MyChart> MyCharts {

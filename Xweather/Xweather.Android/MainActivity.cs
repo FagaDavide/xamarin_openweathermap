@@ -5,6 +5,7 @@ using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Xamarin.Forms.GoogleMaps.Android;
+using Plugin.Permissions;
 
 namespace Xweather.Droid
 {
@@ -20,7 +21,6 @@ namespace Xweather.Droid
                 BitmapDescriptorFactory = new BitmapConfig()
             };
 
-
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.FormsGoogleMaps.Init(this, savedInstanceState);
@@ -30,7 +30,7 @@ namespace Xweather.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }

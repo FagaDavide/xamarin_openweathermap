@@ -19,14 +19,13 @@ namespace Xweather.ApiOpenWeather
         private const string TEMP_UNIT = "metric";
         private const string LIMIT_CNT_MAP = "40";
         private const string LIMIT_CNT_FORCAST = "40";
-        //private const string URL_BASE_MAP = "https://tile.openweathermap.org/map";
         private readonly HttpClient httpClient;
      
         public ApiRequestor()
         {
             httpClient = new HttpClient();
         }
-        public async Task<ForecastRoot> GetForecastLatLon(string Lat = HEARC_LAT, string Lon = HEARC_LON)
+        public async Task<ForecastRoot> GetWeatherAreaLatLon(string Lat = HEARC_LAT, string Lon = HEARC_LON)
         {
             var uri = new Uri(URL_BASE + "/find?lat=" + Lat + "&lon=" + Lon +"&cnt=" + LIMIT_CNT_MAP + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
             string resultInJSON = string.Empty;
@@ -44,26 +43,51 @@ namespace Xweather.ApiOpenWeather
             return JsonConvert.DeserializeObject<ForecastRoot>(resultInJSON);
         }
 
+        public async Task<ForecastRoot> GetWeatherAreaByCity(string City = DEFAULT_CITY)
+        {
+            var wr = await Task.Run(() => GetCurrentWeather(City));
+            var mr = await Task.Run(() => GetWeatherAreaLatLon(wr.coord.lat.ToString(), wr.coord.lon.ToString()));
+
+            return mr;
+        }
+
         public async Task<ForecastRoot> GetForecast(string City = DEFAULT_CITY)
         {
             var uri = new Uri(URL_BASE + "/forecast?q=" + City + "&cnt="+ LIMIT_CNT_FORCAST + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
-        string resultInJSON = string.Empty;
+            string resultInJSON = string.Empty;
             var response = await httpClient.GetAsync(uri);
-        if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             resultInJSON = await response.Content.ReadAsStringAsync();
-        else
+            else
             Debug.WriteLine("ApiRequestor - GetForecast - Foireux (city name?)");
 
-        if (string.IsNullOrEmpty(resultInJSON))
+            if (string.IsNullOrEmpty(resultInJSON))
             return null;
 
-        //Debug.WriteLine(resultInJSON); //a supprimer en prod
+            //Debug.WriteLine(resultInJSON); //a supprimer en prod
 
-        return JsonConvert.DeserializeObject<ForecastRoot>(resultInJSON);
-    }
+            return JsonConvert.DeserializeObject<ForecastRoot>(resultInJSON);
+        }
 
-    //ResponseCurrentMeteo rcm = JsonConvert.DeserializeObject<ResponseCurrentMeteo>(result);
-    public async Task<WeatherRoot> GetCurrentWeather(string City = DEFAULT_CITY)
+        public async Task<ForecastRoot> GetForecastLatLon(string Lat = HEARC_LAT, string Lon = HEARC_LON)
+        {
+            var uri = new Uri(URL_BASE + "/forecast?lat=" + Lat + "&lon=" + Lon + "&cnt=" + LIMIT_CNT_FORCAST + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
+            string resultInJSON = string.Empty;
+            var response = await httpClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+                resultInJSON = await response.Content.ReadAsStringAsync();
+            else
+                Debug.WriteLine("ApiRequestor - GetForecast - Foireux (city name?)");
+
+            if (string.IsNullOrEmpty(resultInJSON))
+                return null;
+
+            //Debug.WriteLine(resultInJSON); //a supprimer en prod
+
+            return JsonConvert.DeserializeObject<ForecastRoot>(resultInJSON);
+        }
+
+        public async Task<WeatherRoot> GetCurrentWeather(string City = DEFAULT_CITY)
         {
             var uri = new Uri(URL_BASE + "/weather?q=" + City + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
             string resultInJSON = string.Empty;
@@ -78,6 +102,24 @@ namespace Xweather.ApiOpenWeather
 
             //Debug.WriteLine(resultInJSON); //a supprimer en prod
         
+            return JsonConvert.DeserializeObject<WeatherRoot>(resultInJSON);
+        }
+
+        public async Task<WeatherRoot> GetCurrentWeatherLatLon(string Lat = HEARC_LAT, string Lon = HEARC_LON)
+        {
+            var uri = new Uri(URL_BASE + "/weather?lat=" + Lat + "&lon=" + Lon + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
+            string resultInJSON = string.Empty;
+            var response = await httpClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+                resultInJSON = await response.Content.ReadAsStringAsync();
+            else
+                Debug.WriteLine("ApiRequestor - GetCurrentWeatherLatLon - Foireux (lat-lon?)");
+
+            if (string.IsNullOrEmpty(resultInJSON))
+                return null;
+
+            //Debug.WriteLine(resultInJSON); //a supprimer en prod
+
             return JsonConvert.DeserializeObject<WeatherRoot>(resultInJSON);
         }
     }

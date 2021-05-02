@@ -25,13 +25,14 @@ namespace Xweather.Views
             hvm.Map.MapClicked += (object sender, MapClickedEventArgs e) => {
                 var lat = e.Point.Latitude.ToString();
                 var lon = e.Point.Longitude.ToString();
-                var tk3 = Task.Run(() => ar.GetForecastLatLon(lat, lon));
+                var tk = Task.Run(() => ar.GetWeatherAreaLatLon(lat, lon));
 
-                tk3.Wait();
-                hvm.Mr = tk3.Result;
+                tk.Wait();
+                hvm.Mr = tk.Result;
 
                 hvm.updateMap();
             };
+
 
             Content = hvm.Map;
             Title = "MAP";
