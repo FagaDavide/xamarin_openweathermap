@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace Xweather.Models
@@ -45,6 +42,17 @@ namespace Xweather.Models
         public double temp_max { get; set; } = 0.0;
         public int pressure { get; set; } = 0;
         public int humidity { get; set; } = 0;
+        public AirQualityIndex aqi { get; set; } = 0;
+    }
+
+    public enum AirQualityIndex : int
+    {
+        Inconnu = 0, //unknow
+        Bon = 1, //Good
+        Moyen = 2, //Fair
+        Acceptable = 3, //Moderate
+        Mauvais = 4, //Poor
+        Dangereux = 5 //VeryPoor
     }
 
     public class Wind
@@ -68,14 +76,26 @@ namespace Xweather.Models
     }
     public class City
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public Coord coord { get; set; }
-        public string country { get; set; }
-        public int population { get; set; }
-        public int timezone { get; set; }
-        public int sunrise { get; set; }
-        public int sunset { get; set; }
+        public int id { get; set; } = 0;
+        public string name { get; set; } = string.Empty;
+        public Coord coord { get; set; } = new Coord();
+        public string country { get; set; } = string.Empty;
+        public int population { get; set; } = 0;
+        public int timezone { get; set; } = 0;
+        public int sunrise { get; set; } = 0;
+        public int sunset { get; set; } = 0;
+    }
+
+    public class Components
+    {
+        public double co { get; set; } = 0.0;
+        public double no { get; set; } = 0.0;
+        public double no2 { get; set; } = 0.0;
+        public double o3 { get; set; } = 0.0;
+        public double so2 { get; set; } = 0.0;
+        public double pm2_5 { get; set; } = 0.0;
+        public double pm10 { get; set; } = 0.0;
+        public double nh3 { get; set; } = 0.0;
     }
 
     public class WeatherRoot
@@ -136,10 +156,43 @@ namespace Xweather.Models
     {
         public string cod { get; set; }
         [JsonIgnore] //not important if i ignor it, i can have the same model for map and forcast
-        public int message { get; set; }
-        public int cnt { get; set; }
+        public int message { get; set; } = 0;
+        public int cnt { get; set; } = 0;
         [JsonProperty("list")]
-        public List<WeatherRoot> list { get; set; }
-        public City city { get; set; }
+        public List<WeatherRoot> list { get; set; } = new List<WeatherRoot>();
+        public City city { get; set; } = new City();
+    }
+
+
+    public class AirPollutionRoot
+    {
+        public int dt { get; set; } = 0;
+        public Main main { get; set; } = new Main();
+        public Components components { get; set; } = new Components();
+
+        [JsonIgnore]
+        public string GetDateDay {
+            get {
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
+                return dtDateTime.ToString("dddd, dd MMMM yyyy", new CultureInfo("fr-FR"));
+            }
+        }
+
+        [JsonIgnore]
+        public string GetDateHourH {
+            get {
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(dt).ToLocalTime();
+                return dtDateTime.ToString("HH", new CultureInfo("fr-FR")) + "h";
+            }
+        }
+    }
+    public class ForcastAirPollutionRoot
+    {
+        public Coord coord { get; set; } = new Coord();
+
+        [JsonProperty("list")]
+        public List<AirPollutionRoot> list { get; set; } = new List<AirPollutionRoot>();
     }
 }

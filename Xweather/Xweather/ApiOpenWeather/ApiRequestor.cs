@@ -33,7 +33,7 @@ namespace Xweather.ApiOpenWeather
             if (response.IsSuccessStatusCode)
                 resultInJSON = await response.Content.ReadAsStringAsync();
             else
-                Debug.WriteLine("ApiRequestor - GetForecast - Foireux (city name?)");
+                Debug.WriteLine("ApiRequestor - GetWeatherAreaLatLon - Foireux (lat-lon?)");
 
             if (string.IsNullOrEmpty(resultInJSON))
                 return null;
@@ -77,7 +77,7 @@ namespace Xweather.ApiOpenWeather
             if (response.IsSuccessStatusCode)
                 resultInJSON = await response.Content.ReadAsStringAsync();
             else
-                Debug.WriteLine("ApiRequestor - GetForecast - Foireux (city name?)");
+                Debug.WriteLine("ApiRequestor - GetForecastLatLon - Foireux (lat-lon?)");
 
             if (string.IsNullOrEmpty(resultInJSON))
                 return null;
@@ -121,6 +121,50 @@ namespace Xweather.ApiOpenWeather
             //Debug.WriteLine(resultInJSON); //a supprimer en prod
 
             return JsonConvert.DeserializeObject<WeatherRoot>(resultInJSON);
+        }
+
+        public async Task<ForcastAirPollutionRoot> GetCurrentAirPollutionLatLon(string Lat = HEARC_LAT, string Lon = HEARC_LON)
+        {
+            var uri = new Uri(URL_BASE + "/air_pollution?lat=" + Lat + "&lon=" + Lon + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
+            string resultInJSON = string.Empty;
+            var response = await httpClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+                resultInJSON = await response.Content.ReadAsStringAsync();
+            else
+                Debug.WriteLine("ApiRequestor - GetCurrentAirPollutionLatLon - Foireux (lat-lon?)");
+
+            if (string.IsNullOrEmpty(resultInJSON))
+                return null;
+
+            //Debug.WriteLine(resultInJSON); //a supprimer en prod
+
+            return JsonConvert.DeserializeObject<ForcastAirPollutionRoot>(resultInJSON);
+        }
+        public async Task<ForcastAirPollutionRoot> GetForecastAirPollutionLatLon(string Lat = HEARC_LAT, string Lon = HEARC_LON)
+        {
+            var uri = new Uri(URL_BASE + "/air_pollution/forecast?lat=" + Lat + "&lon=" + Lon + "&appid=" + API_KEY_OPENWEATHER + "&lang=" + DEFAULT_LANG + "&units=" + TEMP_UNIT);
+            string resultInJSON = string.Empty;
+            var response = await httpClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+                resultInJSON = await response.Content.ReadAsStringAsync();
+            else
+                Debug.WriteLine("ApiRequestor - GetForecastAirPollutionLatLon - Foireux (lat-lon?)");
+
+            if (string.IsNullOrEmpty(resultInJSON))
+                return null;
+
+            //Debug.WriteLine(resultInJSON); //a supprimer en prod
+
+            return JsonConvert.DeserializeObject<ForcastAirPollutionRoot>(resultInJSON);
+        }
+
+
+        public async Task<ForcastAirPollutionRoot> GetForcastAirPollutionByCity(string City = DEFAULT_CITY)
+        {
+            var wr = await Task.Run(() => GetCurrentWeather(City));
+            var ar = await Task.Run(() => GetForecastAirPollutionLatLon(wr.coord.lat.ToString(), wr.coord.lon.ToString()));
+
+            return ar;
         }
     }
 }

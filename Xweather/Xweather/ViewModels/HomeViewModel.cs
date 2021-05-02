@@ -26,13 +26,9 @@ namespace Xweather.ViewModels
 
             initMap();
             initCharts();
+            AddCharts();
         
-            MyCharts.Add(new MyChart() { ChartData = ChartTemperature, NatureData = "Temperature" });
-            MyCharts.Add(new MyChart() { ChartData = ChartPressure, NatureData = "Pression Atmo" });
-            MyCharts.Add(new MyChart() { ChartData = ChartHumidity, NatureData = "Humidité" });
-            MyCharts.Add(new MyChart() { ChartData = ChartWind, NatureData = "Vent" });
         }
-
 
         /* SINGLETON */
         private static HomeViewModel instance;
@@ -73,6 +69,12 @@ namespace Xweather.ViewModels
         private WeatherRoot wr;
         public WeatherRoot Wr {
             get { return Property.Get(wr); }
+            set { Property.Set(value); }
+        }
+
+        private ForcastAirPollutionRoot ar;
+        public ForcastAirPollutionRoot Ar {
+            get { return Property.Get(ar); }
             set { Property.Set(value); }
         }
 
@@ -186,12 +188,29 @@ namespace Xweather.ViewModels
         private Chart ChartTemperature { get; set; } = null;
         private Chart ChartHumidity { get; set; } = null;
         private Chart ChartWind { get; set; } = null;
+        private Chart ChartAirCurrentGeneral { get; set; } = null;
+        private Chart ChartAirCO { get; set; } = null;
+        private Chart ChartAirNO2 { get; set; } = null;
+        private Chart ChartAirO3 { get; set; } = null;
+        private Chart ChartAirSO2 { get; set; } = null;
+        private Chart ChartAirPM2_5 { get; set; } = null;
+        private Chart ChartAirPM10 { get; set; } = null;
+        private Chart ChartAirNH3 { get; set; } = null;
 
 
         public List<ChartEntry> EntriesPressure { get; set; } = new List<ChartEntry>();
         public List<ChartEntry> EntriesTemperature { get; set; } = new List<ChartEntry>();
         public List<ChartEntry> EntriesHumidity { get; set; } = new List<ChartEntry>();
         public List<ChartEntry> EntriesWind { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirCO { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirNO2 { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirO3 { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirSO2 { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirPM2_5 { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirPM10 { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirNH3 { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> EntriesAirCurrentGeneral { get; set; } = new List<ChartEntry>();
+
 
         /* GroupedDataChart showed in chart tab*/
         private List<ObservableGroupCollection<string, MyChart>> groupedDataChart;
@@ -243,6 +262,101 @@ namespace Xweather.ViewModels
                 BackgroundColor = SKColors.White,
                 Entries = EntriesWind,
             };
+
+            ChartAirCurrentGeneral = new RadarChart() {
+                Margin = 40,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirCurrentGeneral,
+            };
+
+            ChartAirCO = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirCO,
+            };
+
+            ChartAirSO2 = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirSO2,
+            };
+
+            ChartAirNO2 = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirNO2,
+            };
+
+            ChartAirO3 = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirO3,
+            };
+
+            ChartAirNH3 = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirNH3,
+            };
+
+            ChartAirPM2_5 = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirPM2_5,
+            };
+
+            ChartAirPM10 = new PointChart() {
+                Margin = 20,
+                IsAnimated = true,
+                AnimationDuration = new TimeSpan(0, 0, 20),
+                LabelTextSize = 60f,
+                LabelColor = SKColors.DodgerBlue,
+                BackgroundColor = SKColors.White,
+                Entries = EntriesAirPM10,
+            };
+        }
+        private void AddCharts()
+        {
+            MyCharts.Add(new MyChart() { ChartData = ChartTemperature, NatureData = "Température" });
+            MyCharts.Add(new MyChart() { ChartData = ChartHumidity, NatureData = "Humidité" });
+            MyCharts.Add(new MyChart() { ChartData = ChartWind, NatureData = "Vent" });
+            MyCharts.Add(new MyChart() { ChartData = ChartPressure, NatureData = "Pression Atmo" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirCurrentGeneral, NatureData = "Pollution Actuelle" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirCO, NatureData = "Monoxyde de carbone" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirNO2, NatureData = "Dioxyde d'azote" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirO3, NatureData = "Ozone" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirSO2, NatureData = "Dioxyde de soufre" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirNH3, NatureData = "Ammoniac" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirPM10, NatureData = "Particule fine (PM10)" });
+            MyCharts.Add(new MyChart() { ChartData = ChartAirPM2_5, NatureData = "Particule super fine (PM2.5)" });
         }
 
         public void updateChartData()
@@ -251,7 +365,140 @@ namespace Xweather.ViewModels
             EntriesTemperature.Clear();
             EntriesHumidity.Clear();
             EntriesWind.Clear();
+            EntriesAirCurrentGeneral.Clear();
+            EntriesAirCO.Clear();
+            EntriesAirSO2.Clear();
+            EntriesAirNO2.Clear();
+            EntriesAirNH3.Clear();
+            EntriesAirO3.Clear();
+            EntriesAirPM2_5.Clear();
+            EntriesAirPM10.Clear();
 
+            if (Ar != null)
+            {
+                var rnd = new Random();
+                var skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)(Ar.list[0].components.co/1000.0)) {
+                    Label = "CO",
+                    ValueLabel = String.Format("{0:0.0}mg/m3", (Ar.list[0].components.co / 1000.0)),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+                skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.no2) {
+                    Label = "NO2",
+                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.no2),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+                skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)(Ar.list[0].components.o3/1000.0)) {
+                    Label = "O3",
+                    ValueLabel = String.Format("{0:0.0}mg/m3", (Ar.list[0].components.o3 / 1000.0)),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+                skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.so2) {
+                    Label = "SO2",
+                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.so2),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+                skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.pm2_5) {
+                    Label = "PM2.5",
+                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.pm2_5),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+                skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.pm10) {
+                    Label = "PM10",
+                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.pm10),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+                skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.nh3) {
+                    Label = "NH3",
+                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.nh3),
+                    ValueLabelColor = skcolor,
+                    Color = skcolor,
+                });
+
+
+                
+                var i = 0; //limie nb of value show in chart
+
+                Ar.list.ForEach(el => {
+                    rnd = new Random();
+                    skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
+                    i++;
+                    if (i > 30)
+                        return;
+
+                    if (i % 3 == 0)
+                    {
+
+                        EntriesAirCO.Add(new ChartEntry((float)el.components.co) {
+                            Label = el.GetDateDay,
+                           // ValueLabel = String.Format("{0:0}μg/m3", el.components.co),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+
+                        EntriesAirNO2.Add(new ChartEntry((float)el.components.no2) {
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.no2),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+
+                        EntriesAirNH3.Add(new ChartEntry((float)el.components.nh3) {
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.nh3),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+
+                        EntriesAirO3.Add(new ChartEntry((float)el.components.o3) {
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.o3),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+
+                        EntriesAirSO2.Add(new ChartEntry((float)el.components.so2) {
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.so2),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+
+                        EntriesAirPM2_5.Add(new ChartEntry((float)el.components.pm2_5) {
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.pm2_5),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+
+                        EntriesAirPM10.Add(new ChartEntry((float)el.components.pm10) {
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.pm10),
+                            ValueLabelColor = skcolor,
+                            Color = skcolor,
+                        });
+                    }
+                });
+            }
+            
             if (Fr != null)
             {
                 Random rnd;

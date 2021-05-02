@@ -23,7 +23,6 @@ namespace Xweather
                 if(isPermissionAllowed)
                     Children.Add(new MapView());
             }
-            Children.Add(new Pollution());
             InitializeComponent();
         }
 

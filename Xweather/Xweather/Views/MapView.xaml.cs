@@ -12,20 +12,20 @@ namespace Xweather.Views
     public partial class MapView : ContentPage
     {
         private HomeViewModel hvm;
-        private ApiRequestor ar;
+        private ApiRequestor api;
 
         public MapView()
         {
-            ar = new ApiRequestor();
+            api = new ApiRequestor();
             hvm = HomeViewModel.GetInstance();
             BindingContext = hvm;
 
             InitializeComponent();
 
             hvm.Map.MapClicked += (object sender, MapClickedEventArgs e) => {
-                var lat = e.Point.Latitude.ToString();
-                var lon = e.Point.Longitude.ToString();
-                var tk = Task.Run(() => ar.GetWeatherAreaLatLon(lat, lon));
+                string lat = e.Point.Latitude.ToString();
+                string lon = e.Point.Longitude.ToString();
+                var tk = Task.Run(() => api.GetWeatherAreaLatLon(lat, lon));
 
                 tk.Wait();
                 hvm.Mr = tk.Result;

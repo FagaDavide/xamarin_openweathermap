@@ -15,7 +15,7 @@ namespace Xweather.Views
     public partial class Home : ContentPage
     {
         HomeViewModel hvm;
-        ApiRequestor ar;
+        ApiRequestor api;
         /* this is a workaround : 
          * Nito.Mvvm.CalculatedProperties of StephenCleary@github
          * don't like update value through task.run and Device.BeginInvokeOnMainThread with GETTER*/
@@ -25,12 +25,14 @@ namespace Xweather.Views
             InitializeComponent();
             this.Title = "HOME";
 
-            ar = new ApiRequestor();
+            api = new ApiRequestor();
             hvm = HomeViewModel.GetInstance();
             BindingContext = hvm;
 
             label1.IsVisible = false;
             label2.IsVisible = false;
+            label3.IsVisible = false;
+            label4.IsVisible = false;
 
             if (Device.RuntimePlatform == Device.UWP)
                 button2.IsVisible = false;
@@ -41,27 +43,34 @@ namespace Xweather.Views
             hvm.Map.MyLocationEnabled = false;
             label1.IsVisible = false;
             label2.IsVisible = false;
+            label3.IsVisible = false;
+            label4.IsVisible = false;
             workaroundCity = hvm.SearchCity;
             Task.Run(() => updateAllData());
         }
 
         private void updateAllData()
         {
-            var tk1 = Task.Run(() => ar.GetCurrentWeather(workaroundCity));
-            var tk2 = Task.Run(() => ar.GetForecast(workaroundCity));
+            var tk1 = Task.Run(() => api.GetCurrentWeather(workaroundCity));
+            var tk2 = Task.Run(() => api.GetForecast(workaroundCity));
+            var tk3 = Task.Run(() => api.GetWeatherAreaByCity(workaroundCity));
+            var tk4 = Task.Run(() => api.GetForcastAirPollutionByCity(workaroundCity));
+           
             tk1.Wait();
             tk2.Wait();
+            tk4.Wait();
 
             /*big sweat to understand that this is the key
               to refresh UI with dataBinding during a Task.Run*/
             Device.BeginInvokeOnMainThread(() => {
                 hvm.Wr = tk1.Result;
                 hvm.Fr = tk2.Result;
+                hvm.Ar = tk4.Result;
                 hvm.updateGroupedDataForcast();
                 hvm.updateChartAndGroupedDataChart();
             });
 
-            var tk3 = Task.Run(() => ar.GetWeatherAreaByCity(workaroundCity));
+           
             tk3.Wait();
             Device.BeginInvokeOnMainThread(() => {
                 hvm.Mr = tk3.Result;
@@ -75,15 +84,19 @@ namespace Xweather.Views
             hvm.Map.MyLocationEnabled = true;
             label1.IsVisible = true;
             label2.IsVisible = true;
+            label3.IsVisible = true;
+            label4.IsVisible = true;
             Task.Run(() => updateAllDataLatLon());
         }
 
         private async Task updateAllDataLatLon()
         {
             var loc = await Task.Run(() => GeoLoc.GetCurrentLocAsync());
-            var tk1 = Task.Run(() => ar.GetWeatherAreaLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
-            var tk2 = Task.Run(() => ar.GetCurrentWeatherLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
-            var tk3 = Task.Run(() => ar.GetForecastLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
+            var tk1 = Task.Run(() => api.GetWeatherAreaLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
+            var tk2 = Task.Run(() => api.GetCurrentWeatherLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
+            var tk3 = Task.Run(() => api.GetForecastLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
+            var tk4 = Task.Run(() => api.GetForecastAirPollutionLatLon(loc.Latitude.ToString(), loc.Longitude.ToString()));
+            
             Device.BeginInvokeOnMainThread(() => {
                 hvm.Map.MoveToRegion(new MapSpan(new Position(loc.Latitude, loc.Longitude), 1, 1));
                 hvm.Location = loc;
@@ -98,9 +111,11 @@ namespace Xweather.Views
 
             tk2.Wait();
             tk3.Wait();
+            tk4.Wait();
             Device.BeginInvokeOnMainThread(() => {
                 hvm.Wr = tk2.Result;
                 hvm.Fr = tk3.Result;
+                hvm.Ar = tk4.Result;
                 hvm.updateGroupedDataForcast();
                 hvm.updateChartAndGroupedDataChart();
             });

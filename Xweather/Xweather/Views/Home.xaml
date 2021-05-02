@@ -31,6 +31,10 @@
                     <Label x:Name="label1" Text="{ Binding Location.Latitude, StringFormat='{}Latitude: {0:#,0.000}' }"/>
                     <Label x:Name="label2" Text="{ Binding Location.Longitude, StringFormat='{}Longitude: {0:#,0.000}'}"/>
                 </StackLayout>
+                <StackLayout  Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                    <Label x:Name="label3" Text="{ Binding Ar.list[0].main.aqi, StringFormat='{}Index de qualité de l´air: {0:}'}"/>
+                    <Label x:Name="label4" Text="{ Binding Ar.list[0].GetDateDay, StringFormat='{}({0:})'}"/>
+                </StackLayout>
                 <StackLayout  Orientation="Horizontal" HorizontalOptions="Fill">
                     <Image HorizontalOptions="Start" HeightRequest="160" WidthRequest="160" Source="{ Binding Wr.weather[0].GetIcon }"/>
                     <Label Text="{ Binding Wr.main.temp, StringFormat='{}{0:#,0.0}°'}" VerticalOptions="Center" HorizontalOptions="End" FontAttributes="Bold" FontSize="40"/>
