@@ -9,20 +9,18 @@ namespace Xweather
 {
     public partial class MainPage : TabbedPage
     {
-        private bool isPermissionAllowed;
+        private Home home = new Home();
         public MainPage()
         {
             BarBackgroundColor = Color.DodgerBlue;
             BarTextColor = Color.White;
-            Children.Add(new Home());
+
+            Children.Add(home);
             Children.Add(new Forecast());
             Children.Add(new ChartView());
             if(Device.RuntimePlatform == Device.Android)
-            {
                 initPermission();
-                if(isPermissionAllowed)
-                    Children.Add(new MapView());
-            }
+
             InitializeComponent();
         }
 
@@ -33,11 +31,12 @@ namespace Xweather
             try
             {
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync<LocationPermission>();
+
                 if (status != PermissionStatus.Granted)
                 {
                     if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
                     {
-                        await DisplayAlert("Need location", "Gunna need that location", "OK");
+                        await DisplayAlert("-=[ INFO ]=-", "Xweather needs access to GPS, please allow location", "OK");
                     }
 
                     status = await CrossPermissions.Current.RequestPermissionAsync<LocationPermission>();
@@ -45,16 +44,18 @@ namespace Xweather
 
                 if (status == PermissionStatus.Granted)
                 {
-                    isPermissionAllowed = true;
+                    //Allowed
+                    Children.Add(new MapView());
                 }
                 else if (status != PermissionStatus.Unknown)
                 {
-                    isPermissionAllowed = false;
+                    //deny
+                    home.btnGPS.IsVisible = false;
                 }
             }
             catch (Exception ex)
             {
-                isPermissionAllowed = false;
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
     }

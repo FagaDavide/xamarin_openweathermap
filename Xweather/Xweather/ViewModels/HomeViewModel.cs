@@ -7,7 +7,7 @@ using Xweather.Models;
 using SkiaSharp;
 using Microcharts;
 using System;
-using Xamarin.Forms.GoogleMaps;
+using Xamarin.Forms.GoogleMaps; //isn't the real googleMaps like you think, is xamarin.forms.maps improved
 using Xamarin.Forms;
 using System.Net;
 using System.IO;
@@ -23,11 +23,11 @@ namespace Xweather.ViewModels
             wr = new WeatherRoot(); //current weather
             fr = new ForecastRoot(); // list of weather with same city different date to show futur prevision
             mr = new ForecastRoot(); // list of weather with same date differents cities to show in map current position and neiboors cities
+            ar = new ForcastAirPollutionRoot();
 
             initMap();
             initCharts();
             AddCharts();
-        
         }
 
         /* SINGLETON */
@@ -448,8 +448,8 @@ namespace Xweather.ViewModels
                     {
 
                         EntriesAirCO.Add(new ChartEntry((float)el.components.co) {
-                            Label = el.GetDateDay,
-                           // ValueLabel = String.Format("{0:0}μg/m3", el.components.co),
+                            Label = el.GetDateHourH,
+                            ValueLabel = String.Format("{0:0}μg/m3", el.components.co),
                             ValueLabelColor = skcolor,
                             Color = skcolor,
                         });

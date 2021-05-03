@@ -13,6 +13,7 @@ namespace Xweather.Droid
     {
         public AndroidBitmapDescriptor ToNative(BitmapDescriptor descriptor)
         {
+            /*
             int iconId = 0;
             switch (descriptor.Id)
             {
@@ -26,6 +27,9 @@ namespace Xweather.Droid
             var url = new URL("https://s3-eu-west-1.amazonaws.com/mediapool.starticket.ch/wwwroot/ticketing/img/events/667x375_konzertfabrik_z7_190721_1600x900.jpg");
             Bitmap bmp = BitmapFactory.DecodeStream(url.OpenConnection().InputStream);
             return AndroidBitmapDescriptorFactory.FromBitmap(bmp);// FromAsset("MrG.bmp"); //FromPath("https://people.he-arc.ch/photos/GrunenwaldDavid.jpg");//.FromResource(iconId);
+        
+            */
+            return null;   
         }
     }
 }

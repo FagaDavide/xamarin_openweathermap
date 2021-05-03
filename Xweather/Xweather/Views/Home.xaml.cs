@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
@@ -20,6 +22,7 @@ namespace Xweather.Views
          * Nito.Mvvm.CalculatedProperties of StephenCleary@github
          * don't like update value through task.run and Device.BeginInvokeOnMainThread with GETTER*/
         string workaroundCity;
+        public Button btnGPS;
         public Home()
         {
             InitializeComponent();
@@ -33,6 +36,8 @@ namespace Xweather.Views
             label2.IsVisible = false;
             label3.IsVisible = false;
             label4.IsVisible = false;
+
+            btnGPS = button2;
 
             if (Device.RuntimePlatform == Device.UWP)
                 button2.IsVisible = false;
