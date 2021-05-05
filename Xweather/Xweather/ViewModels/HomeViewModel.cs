@@ -1,7 +1,5 @@
-﻿using Nito.Mvvm.CalculatedProperties; // one true <3 to  StephenCleary@github 
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using Xweather.Models;
 using SkiaSharp;
@@ -14,12 +12,11 @@ using System.IO;
 
 namespace Xweather.ViewModels
 {
-    class HomeViewModel : INotifyPropertyChanged
+    class HomeViewModel : BaseViewModel
     {
         /* CONSTRUCTOR */
         private HomeViewModel()
         {
-            Property = new PropertyHelper(RaisePropertyChanged);
             wr = new WeatherRoot(); //current weather
             fr = new ForecastRoot(); // list of weather with same city different date to show futur prevision
             mr = new ForecastRoot(); // list of weather with same date differents cities to show in map current position and neiboors cities
@@ -91,21 +88,6 @@ namespace Xweather.ViewModels
             set { Property.Set(value); }
         }
 
-        /* Data Binding system */
-        private readonly PropertyHelper Property;
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(PropertyChangedEventArgs args)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, args);
-        }
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         /* MAP System */
         private Map map;
@@ -169,7 +151,6 @@ namespace Xweather.ViewModels
         }
 
         /* GeoLoc System */
-     
         private Xamarin.Essentials.Location location;
         public Xamarin.Essentials.Location Location {
             get { return Property.Get(location); }
@@ -234,7 +215,7 @@ namespace Xweather.ViewModels
 
             ChartTemperature = new LineChart() {
                 Margin = 20,
-                IsAnimated = true,
+                IsAnimated = false,
                 AnimationDuration = new TimeSpan(0, 0, 20),
                 LabelTextSize = 60f,
                 LabelColor = SKColors.DodgerBlue,
@@ -378,123 +359,128 @@ namespace Xweather.ViewModels
             {
                 var rnd = new Random();
                 var skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)(Ar.list[0].components.co/1000.0)) {
+                var currentAr = Ar.GetCurrentPollution;
+
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)(currentAr.components.co/1000.0)) {
                     Label = "CO",
-                    ValueLabel = String.Format("{0:0.0}mg/m3", (Ar.list[0].components.co / 1000.0)),
+                    ValueLabel = String.Format("{0:0.0}mg/m3", (currentAr.components.co / 1000.0)),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
 
                 skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.no2) {
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)currentAr.components.no2) {
                     Label = "NO2",
-                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.no2),
+                    ValueLabel = String.Format("{0:0.0}μg/m3", currentAr.components.no2),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
 
                 skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)(Ar.list[0].components.o3/1000.0)) {
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)(currentAr.components.o3/1000.0)) {
                     Label = "O3",
-                    ValueLabel = String.Format("{0:0.0}mg/m3", (Ar.list[0].components.o3 / 1000.0)),
+                    ValueLabel = String.Format("{0:0.0}mg/m3", (currentAr.components.o3 / 1000.0)),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
 
                 skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.so2) {
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)currentAr.components.so2) {
                     Label = "SO2",
-                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.so2),
+                    ValueLabel = String.Format("{0:0.0}μg/m3", currentAr.components.so2),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
 
                 skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.pm2_5) {
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)currentAr.components.pm2_5) {
                     Label = "PM2.5",
-                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.pm2_5),
+                    ValueLabel = String.Format("{0:0.0}μg/m3", currentAr.components.pm2_5),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
 
                 skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.pm10) {
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)currentAr.components.pm10) {
                     Label = "PM10",
-                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.pm10),
+                    ValueLabel = String.Format("{0:0.0}μg/m3", currentAr.components.pm10),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
 
                 skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                EntriesAirCurrentGeneral.Add(new ChartEntry((float)Ar.list[0].components.nh3) {
+                EntriesAirCurrentGeneral.Add(new ChartEntry((float)currentAr.components.nh3) {
                     Label = "NH3",
-                    ValueLabel = String.Format("{0:0.0}μg/m3", Ar.list[0].components.nh3),
+                    ValueLabel = String.Format("{0:0.0}μg/m3", currentAr.components.nh3),
                     ValueLabelColor = skcolor,
                     Color = skcolor,
                 });
-
-
-                
+              
                 var i = 0; //limie nb of value show in chart
+                var datenow = DateTimeOffset.Now.ToUnixTimeSeconds(); //i don't know why, but forecast pollution also gives some data in the past
 
                 Ar.list.ForEach(el => {
                     rnd = new Random();
                     skcolor = SKColor.Parse(String.Format("#{0:X6}", rnd.Next(0x1000000)));
-                    i++;
-                    if (i > 30)
-                        return;
+                   
 
-                    if (i % 3 == 0)
+                    if (el.dt >= datenow)
                     {
+                        i++;
+                        if (i > 28)
+                            return;
 
-                        EntriesAirCO.Add(new ChartEntry((float)el.components.co) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.co),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                        if (i % 3 == 0)
+                        {
+                            EntriesAirCO.Add(new ChartEntry((float)el.components.co) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.co),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
 
-                        EntriesAirNO2.Add(new ChartEntry((float)el.components.no2) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.no2),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                            EntriesAirNO2.Add(new ChartEntry((float)el.components.no2) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.no2),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
 
-                        EntriesAirNH3.Add(new ChartEntry((float)el.components.nh3) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.nh3),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                            EntriesAirNH3.Add(new ChartEntry((float)el.components.nh3) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.nh3),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
 
-                        EntriesAirO3.Add(new ChartEntry((float)el.components.o3) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.o3),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                            EntriesAirO3.Add(new ChartEntry((float)el.components.o3) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.o3),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
 
-                        EntriesAirSO2.Add(new ChartEntry((float)el.components.so2) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.so2),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                            EntriesAirSO2.Add(new ChartEntry((float)el.components.so2) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.so2),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
 
-                        EntriesAirPM2_5.Add(new ChartEntry((float)el.components.pm2_5) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.pm2_5),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                            EntriesAirPM2_5.Add(new ChartEntry((float)el.components.pm2_5) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.pm2_5),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
 
-                        EntriesAirPM10.Add(new ChartEntry((float)el.components.pm10) {
-                            Label = el.GetDateHourH,
-                            ValueLabel = String.Format("{0:0}μg/m3", el.components.pm10),
-                            ValueLabelColor = skcolor,
-                            Color = skcolor,
-                        });
+                            EntriesAirPM10.Add(new ChartEntry((float)el.components.pm10) {
+                                Label = el.GetDateHourH,
+                                ValueLabel = String.Format("{0:0}μg/m3", el.components.pm10),
+                                ValueLabelColor = skcolor,
+                                Color = skcolor,
+                            });
+                        }
                     }
                 });
             }

@@ -21,6 +21,9 @@ namespace Xweather
             if(Device.RuntimePlatform == Device.Android)
                 initPermission();
 
+            if (Xamarin.Essentials.Connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
+                DisplayAlert("-=[ INFO ]=-", "Internet connectivity not found", "OK");
+
             InitializeComponent();
         }
 

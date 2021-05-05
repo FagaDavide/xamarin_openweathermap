@@ -14,7 +14,7 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout>
-                            <forms:ChartView Chart="{ Binding ChartData }" HeightRequest="250"  WidthRequest="400"/>
+                            <forms:ChartView Chart="{ Binding ChartData }" HeightRequest="400"  WidthRequest="400"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

@@ -7,9 +7,5 @@
              android:TabbedPage.ToolbarPlacement="Bottom"
              Title="XWeather">
 
-    <TabbedPage.Children>
-        
-     
-    </TabbedPage.Children>
-
+    <TabbedPage.Children />
 </TabbedPage>

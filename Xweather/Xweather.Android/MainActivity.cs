@@ -1,10 +1,7 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
-using Xamarin.Forms.GoogleMaps.Android;
 using Plugin.Permissions;
 
 namespace Xweather.Droid
@@ -15,11 +12,6 @@ namespace Xweather.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            var platformConfig = new PlatformConfig 
-            {
-                BitmapDescriptorFactory = new BitmapConfig()
-            };
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

@@ -194,5 +194,20 @@ namespace Xweather.Models
 
         [JsonProperty("list")]
         public List<AirPollutionRoot> list { get; set; } = new List<AirPollutionRoot>();
+
+        public AirPollutionRoot GetCurrentPollution {
+            get {
+                if (list.Count > 0)
+                {
+                    var datenow = DateTimeOffset.Now.ToUnixTimeSeconds();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        if (list[i].dt >= datenow)
+                            return list[i];
+                    }
+                }
+                return null;
+            }
+        }
     }
 }

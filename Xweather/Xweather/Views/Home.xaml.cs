@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
@@ -26,7 +22,7 @@ namespace Xweather.Views
         public Home()
         {
             InitializeComponent();
-            this.Title = "HOME";
+            Title = "HOME";
 
             api = new ApiRequestor();
             hvm = HomeViewModel.GetInstance();
@@ -34,8 +30,6 @@ namespace Xweather.Views
 
             label1.IsVisible = false;
             label2.IsVisible = false;
-            label3.IsVisible = false;
-            label4.IsVisible = false;
 
             btnGPS = button2;
 
@@ -48,8 +42,6 @@ namespace Xweather.Views
             hvm.Map.MyLocationEnabled = false;
             label1.IsVisible = false;
             label2.IsVisible = false;
-            label3.IsVisible = false;
-            label4.IsVisible = false;
             workaroundCity = hvm.SearchCity;
             Task.Run(() => updateAllData());
         }
@@ -79,7 +71,8 @@ namespace Xweather.Views
             tk3.Wait();
             Device.BeginInvokeOnMainThread(() => {
                 hvm.Mr = tk3.Result;
-                hvm.Map.MoveToRegion(new MapSpan(new Position(hvm.Mr.list[0].coord.lat, hvm.Mr.list[0].coord.lon), 1, 1));
+                if(hvm.Mr.list.Count > 0)
+                    hvm.Map.MoveToRegion(new MapSpan(new Position(hvm.Mr.list[0].coord.lat, hvm.Mr.list[0].coord.lon), 1, 1));
                 hvm.updateMap();
             });
         }
@@ -89,8 +82,6 @@ namespace Xweather.Views
             hvm.Map.MyLocationEnabled = true;
             label1.IsVisible = true;
             label2.IsVisible = true;
-            label3.IsVisible = true;
-            label4.IsVisible = true;
             Task.Run(() => updateAllDataLatLon());
         }
 
@@ -110,7 +101,8 @@ namespace Xweather.Views
             tk1.Wait();
             Device.BeginInvokeOnMainThread(() => {
                 hvm.Mr = tk1.Result;
-                hvm.SearchCity = hvm.Mr.list[0].name;
+                if(hvm.Mr.list.Count > 0)
+                    hvm.SearchCity = hvm.Mr.list[0].name;
                 hvm.updateMap();
             });
 

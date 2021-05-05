@@ -12,20 +12,9 @@
 
   <ItemGroup>
     <None Remove="Assets\globe.svg" />
-    <None Remove="Assets\globe1.svg" />
     <None Remove="Assets\home.svg" />
-    <None Remove="Assets\home1.svg" />
     <None Remove="Assets\map.svg" />
-    <None Remove="Assets\map1.svg" />
     <None Remove="Assets\pollution.svg" />
-    <None Remove="Assets\pollution1.svg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\globe1.svg" />
-    <EmbeddedResource Include="Assets\home1.svg" />
-    <EmbeddedResource Include="Assets\map1.svg" />
-    <EmbeddedResource Include="Assets\pollution1.svg" />
   </ItemGroup>
 
   <ItemGroup>
